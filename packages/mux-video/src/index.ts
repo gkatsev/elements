@@ -1,4 +1,4 @@
-import "./polyfills/window";
+// import "./polyfills/window";
 
 import CustomVideoElement from "./CustomVideoElement.js";
 import mux, { Options, HighPriorityMetadata } from "mux-embed";
@@ -48,7 +48,7 @@ const toMuxVideoURL = (playbackId: string | null) => {
   return `https://stream.mux.com/${idPart}.m3u8${queryPart}`;
 };
 
-const hlsSupported = Hls.isSupported();
+const hlsSupported = (typeof document !== 'undefined') && Hls.isSupported();
 
 type HTMLVideoElementWithMux = HTMLVideoElement & { mux?: typeof mux };
 
@@ -378,11 +378,13 @@ declare global {
   }
 }
 
-/** @TODO Refactor once using `globalThis` polyfills */
-if (!window.customElements.get("mux-video")) {
-  window.customElements.define("mux-video", MuxVideoElement);
-  /** @TODO consider externalizing this (breaks standard modularity) */
-  window.MuxVideoElement = MuxVideoElement;
+if (typeof window !== 'undefined') {
+  /** @TODO Refactor once using `globalThis` polyfills */
+  if (!window.customElements.get("mux-video")) {
+    window.customElements.define("mux-video", MuxVideoElement);
+    /** @TODO consider externalizing this (breaks standard modularity) */
+    window.MuxVideoElement = MuxVideoElement;
+  }
 }
 
 export { Hls };

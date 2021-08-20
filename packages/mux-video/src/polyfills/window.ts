@@ -44,23 +44,32 @@ if (!globalThis.HTMLElement) {
   globalThis.HTMLElement = HTMLElement;
 }
 
-if (!globalThis.document) {
-  const document = {
-    createElement(
-      _tagName: string,
-      _options?: ElementCreationOptions
-    ): HTMLElement {
-      return new HTMLElement();
-    },
+if (!(globalThis.document?.createElement)) {
+  const document = globalThis.document ?? {};
+  document.createElement = function createElement(
+    _tagName: string,
+    _options?: ElementCreationOptions
+  ): HTMLElement {
+    return new HTMLElement();
   };
+
 
   // NOTE: Adding ts-ignore since `document` typedef is much larger than what we're stubbing. Consider more robust TypeScript solution (e.g. downstream usage)
   // @ts-ignore
   globalThis.document = document;
 }
 
-if (!globalThis.window) {
+// if (!globalThis.window) {
   // NOTE: Adding ts-ignore since `window` typedef is much larger than what we're stubbing. Consider more robust TypeScript solution (e.g. downstream usage)
   // @ts-ignore
-  globalThis.window = globalThis;
-}
+globalThis.window = { ...(globalThis.window ?? {}), ...globalThis };
+// }
+//
+//
+//
+//
+//
+//
+//
+//
+//

@@ -5,7 +5,19 @@
  * extended today across browsers.
  */
 
-const template = document.createElement("template");
+let template
+
+if (typeof document !== 'undefined') {
+  template = document.createElement("template");
+} else {
+  template = {};
+}
+
+if (typeof HTMLElement === 'undefined') {
+  class HTMLElement {}
+  globalThis.HTMLElement = HTMLElement;
+}
+
 // Could you get styles to apply by passing a global button from global to shadow?
 
 template.innerHTML = `
@@ -179,28 +191,30 @@ let nativeElProps = [];
 // Can't check typeof directly on element prototypes without
 // throwing Illegal Invocation errors, so creating an element
 // to check on instead.
-const nativeElTest = document.createElement("video");
 
-// Deprecated props throw warnings if used, so exclude them
-const deprecatedProps = [
-  "webkitDisplayingFullscreen",
-  "webkitSupportsFullscreen",
-];
+if (typeof document !== 'undefined') {
+  const nativeElTest = document.createElement("video");
 
-// Walk the prototype chain up to HTMLElement.
-// This will grab all super class props in between.
-// i.e. VideoElement and MediaElement
-for (
-  let proto = Object.getPrototypeOf(nativeElTest);
-  proto && proto !== HTMLElement.prototype;
-  proto = Object.getPrototypeOf(proto)
-) {
-  Object.keys(proto).forEach((key) => {
-    if (deprecatedProps.indexOf(key) === -1) {
-      nativeElProps.push(key);
-    }
-  });
-}
+  // Deprecated props throw warnings if used, so exclude them
+  const deprecatedProps = [
+    "webkitDisplayingFullscreen",
+    "webkitSupportsFullscreen",
+  ];
+
+  // Walk the prototype chain up to HTMLElement.
+  // This will grab all super class props in between.
+  // i.e. VideoElement and MediaElement
+  for (
+    let proto = Object.getPrototypeOf(nativeElTest);
+    proto && proto !== HTMLElement.prototype;
+    proto = Object.getPrototypeOf(proto)
+  ) {
+    Object.keys(proto).forEach((key) => {
+      if (deprecatedProps.indexOf(key) === -1) {
+        nativeElProps.push(key);
+      }
+    });
+  }
 
 // For the video element we also want to pass through all event listeners
 // because all the important events happen there.
@@ -233,6 +247,7 @@ nativeElProps.forEach((prop) => {
     Object.defineProperty(CustomVideoElement.prototype, prop, config);
   }
 });
+}
 
 function arrayFindAnyCase(arr, word) {
   let found = null;
@@ -246,7 +261,7 @@ function arrayFindAnyCase(arr, word) {
   return found;
 }
 
-if (!window.customElements.get("custom-video")) {
+if (typeof window !== 'undefined' && !window.customElements.get("custom-video")) {
   window.customElements.define("custom-video", CustomVideoElement);
   window.CustomVideoElement = CustomVideoElement;
 }
