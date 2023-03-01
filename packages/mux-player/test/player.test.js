@@ -1103,7 +1103,7 @@ describe('<mux-player> seek to live behaviors', function () {
 
 // skip cuepoint tests on all browsers
 // TODO fixup cuepoint tests and behavior across browsers
-describe.skip('Feature: cuePoints', async () => {
+describe.only('Feature: cuePoints', async () => {
   it('adds cuepoints', async () => {
     const cuePoints = [
       { time: 0, value: { label: 'CTA 1', showDuration: 10 } },
@@ -1151,7 +1151,7 @@ describe.skip('Feature: cuePoints', async () => {
     assert.deepEqual(muxPlayerEl.activeCuePoint, expectedCuePoint);
   });
 
-  it('clears cuepoints when playback-id is updated', async () => {
+  it.only('clears cuepoints when playback-id is updated', async () => {
     const cuePoints = [
       { time: 0, value: { label: 'CTA 1', showDuration: 10 } },
       { time: 15, value: { label: 'CTA 2', showDuration: 5 } },
@@ -1159,16 +1159,32 @@ describe.skip('Feature: cuePoints', async () => {
     ];
     const playbackId = '23s11nz72DsoN657h4314PjKKjsF2JG33eBQQt6B95I';
     const muxPlayerEl = await fixture(`<mux-player
+      prefer-playback="mse"
       stream-type="on-demand"
       playback-id="${playbackId}"
     ></mux-player>`);
+    console.log(muxPlayerEl.media);
     await muxPlayerEl.addCuePoints(cuePoints);
-    await aTimeout(50);
-    assert.deepEqual(muxPlayerEl.cuePoints, cuePoints, 'cue points were added as expected');
-    muxPlayerEl.playbackId = 'DS00Spx1CV902MCtPj5WknGlR102V5HFkDe';
-    await oneEvent(muxPlayerEl, 'emptied');
-    // Safari needs an extra tick for the cues to clear
-    await aTimeout(50);
-    assert.equal(muxPlayerEl.cuePoints.length, 0, 'cuePoints should be empty');
+    const mv = muxPlayerEl.media.nativeEl;
+    console.log(mv.src);
+    console.log(muxPlayerEl.cuePoints.length, muxPlayerEl.textTracks?.[1]?.cues?.length);
+    window.muxPlayerEl = muxPlayerEl;
+    // await aTimeout(50);
+    // debugger;
+    // console.trace('!!!', muxSet.size);
+    assert.deepEqual(muxPlayerEl.cuePoints, cuePoints, '1 cue points were added as expected');
+
+    await aTimeout(500);
+    const mv2 = muxPlayerEl.media.nativeEl;
+    console.log(muxPlayerEl.cuePoints.length, muxPlayerEl.textTracks?.[1]?.cues?.length);
+    // console.log(mv === mv2, '###')
+    assert.deepEqual(muxPlayerEl.cuePoints, cuePoints, '2 cue points were added as expected');
+    //
+    // debugger;
+    // muxPlayerEl.playbackId = 'DS00Spx1CV902MCtPj5WknGlR102V5HFkDe';
+    // await oneEvent(muxPlayerEl, 'emptied');
+    // // Safari needs an extra tick for the cues to clear
+    // await aTimeout(50);
+    // assert.equal(muxPlayerEl.cuePoints.length, 0, 'cuePoints should be empty');
   });
 });

@@ -89,6 +89,7 @@ export const getError = (mediaEl: HTMLMediaElement) => {
 
 export const initialize = (props: Partial<MuxMediaPropsInternal>, mediaEl: HTMLMediaElement, core?: PlaybackCore) => {
   // Automatically tear down previously initialized mux data & hls instance if it exists.
+  console.log('initialize########');
   teardown(mediaEl, core);
   // NOTE: metadata should never be nullish/nil. Adding here for type safety due to current type defs.
   const { metadata = {} } = props;
@@ -125,6 +126,7 @@ export const teardown = (mediaEl?: HTMLMediaElement | null, core?: PlaybackCore)
   }
   if (mediaEl) {
     mediaEl.removeAttribute('src');
+    console.log('load 1');
     mediaEl.load();
     mediaEl.removeEventListener('error', handleNativeError);
     mediaEl.removeEventListener('error', handleInternalError);
@@ -352,6 +354,10 @@ export const loadMedia = (
     mediaEl.addEventListener(
       'emptied',
       () => {
+        console.trace('!!!!@!#@#@!$$@#!$@#%@!');
+        mediaEl.textTracks.addEventListener('removetrack', (e) => {
+          console.log('REMOVED', e.track.label);
+        });
         const trackEls: NodeListOf<HTMLTrackElement> = mediaEl.querySelectorAll('track[data-removeondestroy]');
         trackEls.forEach((trackEl) => {
           trackEl.remove();

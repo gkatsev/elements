@@ -2,6 +2,11 @@ import Hls from './hls';
 import { CuePoint } from './types';
 import { addEventListenerWithTeardown } from './util';
 
+const muxMediaState: WeakMap<HTMLMediaElement, EventListener> = new WeakMap();
+
+const muxSet = new Set();
+window.muxSet = muxSet;
+
 export function setupTracks(
   mediaEl: HTMLMediaElement,
   hls: Pick<Hls, 'on' | 'once' | 'subtitleTracks' | 'subtitleTrack'>
@@ -75,6 +80,7 @@ export function setupTracks(
   hls.once(Hls.Events.DESTROYING, () => {
     mediaEl.textTracks.removeEventListener('change', changeHandler);
     // Use data attribute to identify tracks that should be removed when switching sources/destroying hls.js instance.
+    console.trace('????????');
     const trackEls: NodeListOf<HTMLTrackElement> = mediaEl.querySelectorAll('track[data-removeondestroy]');
     trackEls.forEach((trackEl) => {
       trackEl.remove();
@@ -148,9 +154,10 @@ export const getCuePointsTrack = (
   mediaEl: HTMLMediaElement,
   { label = DEFAULT_CUEPOINTS_TRACK_LABEL }: CuePointsConfig = DefaultCuePointsConfig
 ) => {
-  return Array.from(mediaEl.querySelectorAll('track')).find((trackEl) => {
-    return trackEl.track.label === label && trackEl.track.kind === 'metadata';
-  })?.track;
+  muxSet.add(mediaEl);
+  return Array.from(mediaEl.textTracks).find((track) => {
+    return track.label === label && track.kind === 'metadata';
+  });
 };
 
 export async function addCuePoints<T>(
@@ -158,15 +165,38 @@ export async function addCuePoints<T>(
   cuePoints: CuePoint<T>[],
   cuePointsConfig: CuePointsConfig = DefaultCuePointsConfig
 ) {
+  muxSet.add(mediaEl);
   // If the track has already been created/added, use it.
   let track = getCuePointsTrack(mediaEl, cuePointsConfig);
   if (!track) {
     // Otherwise, create a new one
+
+    muxSet.add(mediaEl);
+    console.log('creating a new track element');
+    // if we're creating a new track, prevent the default track from being created
+    // on loadstart
+    // if (muxMediaState.has(mediaEl)) {
+    //   mediaEl.removeEventListener('loadstart', muxMediaState.get(mediaEl) as EventListener);
+    //   muxMediaState.delete(mediaEl);
+    // }
+    //
     const { label = DEFAULT_CUEPOINTS_TRACK_LABEL } = cuePointsConfig;
+
+    const promise = new Promise((resolve) => {
+      mediaEl.textTracks.addEventListener('addtrack', function (e) {
+        if (e.track.label === label) {
+          resolve();
+        }
+
+        console.log('!!!', e.track.label, e.track === track);
+      });
+    });
+
     track = addTextTrack(mediaEl, 'metadata', label);
     track.mode = 'hidden';
     // Wait a tick before providing a newly created track. Otherwise e.g. cues disappear when using track.addCue().
-    await new Promise((resolve) => setTimeout(() => resolve(undefined), 0));
+    // await new Promise((resolve) => setTimeout(() => resolve(undefined), 0));
+    await promise;
   }
 
   if (track.mode !== 'hidden') {
@@ -198,6 +228,8 @@ export async function addCuePoints<T>(
       (track as TextTrack).addCue(cue);
     });
 
+  console.log(Array.from(track.cues, (c) => c.text));
+
   return track;
 }
 
@@ -228,9 +260,13 @@ export async function setupCuePoints(
   mediaEl: HTMLMediaElement,
   cuePointsConfig: CuePointsConfig = DefaultCuePointsConfig
 ) {
+  console.log('sssss');
+  muxSet.add(mediaEl);
   return new Promise((resolve) => {
-    addEventListenerWithTeardown(mediaEl, 'loadstart', async () => {
+    const loadstartHandler = async () => {
+      console.log('ssssss111111');
       const track = await addCuePoints(mediaEl, [], cuePointsConfig);
+      muxSet.add(mediaEl);
       addEventListenerWithTeardown(
         mediaEl,
         'cuechange',
@@ -249,6 +285,20 @@ export async function setupCuePoints(
         track
       );
       resolve(track);
-    });
+    };
+
+    console.log('setup cuepoints');
+    // if (muxMediaState.has(mediaEl)) {
+    //   mediaEl.removeEventListener('loadstart', muxMediaState.get(mediaEl) as EventListener);
+    //   muxMediaState.delete(mediaEl);
+    // }
+    // muxMediaState.set(mediaEl, loadstartHandler);
+
+    // console.log(mediaEl.readyState);
+    // if (mediaEl.readyState > 1) {
+    //   loadstartHandler();
+    // } else {
+    addEventListenerWithTeardown(mediaEl, 'loadstart', loadstartHandler);
+    // }
   });
 }
