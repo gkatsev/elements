@@ -1,4 +1,5 @@
 /// <reference path="../dist/types/shared-polyfills.d.ts" />
+/// <reference path="../dist/types/mux-embed.d.ts" />
 import { globalThis, document } from 'shared-polyfills';
 // @ts-ignore
 import { MediaController } from 'media-chrome';
