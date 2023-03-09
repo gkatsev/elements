@@ -1,5 +1,4 @@
-/// <reference path="../../dist/types/shared-polyfills.d.ts" />
-import { globalThis, document } from 'shared-polyfills';
+import { window, document } from 'shared-polyfills';
 
 /* Inspired by HTMLDialogElement &
    https://github.com/GoogleChrome/dialog-polyfill/blob/master/index.js */
@@ -69,7 +68,7 @@ template.innerHTML = `
   </div>
 `;
 
-class MediaDialog extends globalThis.HTMLElement {
+class MediaDialog extends window.HTMLElement {
   static styles: string = styles;
   static template: HTMLTemplateElement = template;
   static observedAttributes = ['open'];
@@ -182,9 +181,9 @@ function restoreFocus(el: MediaDialog) {
   }
 }
 
-if (!globalThis.customElements.get('media-dialog')) {
-  globalThis.customElements.define('media-dialog', MediaDialog);
-  (globalThis as any).MediaDialog = MediaDialog;
+if (!window.customElements.get('media-dialog')) {
+  window.customElements.define('media-dialog', MediaDialog);
+  (window as any).MediaDialog = MediaDialog;
 }
 
 export default MediaDialog;

@@ -1,5 +1,4 @@
-/// <reference path="../../dist/types/shared-polyfills.d.ts" />
-import { globalThis, document } from 'shared-polyfills';
+import { window, document } from 'shared-polyfills';
 
 const styles = `
   :host {
@@ -19,7 +18,7 @@ template.innerHTML = `
 
 const ButtonPressedKeys = ['Enter', ' '];
 
-class MxpTimeDisplay extends globalThis.HTMLElement {
+class MxpTimeDisplay extends window.HTMLElement {
   static get observedAttributes() {
     return ['hide-duration', 'remaining', 'disabled', 'aria-disabled'];
   }
@@ -107,9 +106,9 @@ class MxpTimeDisplay extends globalThis.HTMLElement {
   }
 }
 
-if (!globalThis.customElements.get('mxp-time-display')) {
-  globalThis.customElements.define('mxp-time-display', MxpTimeDisplay);
-  (globalThis as any).MxpTimeDisplay = MxpTimeDisplay;
+if (!window.customElements.get('mxp-time-display')) {
+  window.customElements.define('mxp-time-display', MxpTimeDisplay);
+  (window as any).MxpTimeDisplay = MxpTimeDisplay;
 }
 
 export default MxpTimeDisplay;

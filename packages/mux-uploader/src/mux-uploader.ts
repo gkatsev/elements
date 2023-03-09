@@ -1,5 +1,5 @@
 /// <reference path="../dist/types/shared-polyfills.d.ts" />
-import { globalThis } from 'shared-polyfills';
+import { window } from 'shared-polyfills';
 import * as UpChunk from '@mux/upchunk';
 
 import rootTemplate from './layouts/block';
@@ -56,7 +56,7 @@ interface MuxUploaderElement extends HTMLElement {
   ): void;
 }
 
-class MuxUploaderElement extends globalThis.HTMLElement implements MuxUploaderElement {
+class MuxUploaderElement extends window.HTMLElement implements MuxUploaderElement {
   protected _endpoint: Endpoint;
 
   constructor() {
@@ -187,10 +187,10 @@ declare global {
   var MuxUploaderElement: MuxUploaderElementType;
 }
 
-if (!globalThis.customElements.get('mux-uploader')) {
-  globalThis.customElements.define('mux-uploader', MuxUploaderElement);
+if (!window.customElements.get('mux-uploader')) {
+  window.customElements.define('mux-uploader', MuxUploaderElement);
   /** @TODO consider externalizing this (breaks standard modularity) */
-  globalThis.MuxUploaderElement = MuxUploaderElement;
+  window.MuxUploaderElement = MuxUploaderElement;
 }
 
 export default MuxUploaderElement;

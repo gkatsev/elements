@@ -1,5 +1,4 @@
-/// <reference path="../dist/types/shared-polyfills.d.ts" />
-import { globalThis } from 'shared-polyfills';
+import { window } from 'shared-polyfills';
 import { VideoEvents } from '@mux/mux-video';
 import type MuxVideoElement from '@mux/mux-video';
 import * as logger from './logger';
@@ -148,7 +147,7 @@ interface VideoApiElement extends PartialHTMLVideoElement, HTMLElement {
   ): void;
 }
 
-class VideoApiElement extends globalThis.HTMLElement implements VideoApiElement {
+class VideoApiElement extends window.HTMLElement implements VideoApiElement {
   static get observedAttributes() {
     return [...AllowedVideoAttributeNames, ...CustomVideoAttributesNames];
   }

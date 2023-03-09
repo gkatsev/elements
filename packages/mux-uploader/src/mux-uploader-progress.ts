@@ -1,5 +1,5 @@
 /// <reference path="../dist/types/shared-polyfills.d.ts" />
-import { globalThis, document } from 'shared-polyfills';
+import { window, document } from 'shared-polyfills';
 import { ProgressTypes } from './constants';
 import { getMuxUploaderEl } from './utils/element-utils';
 import { formatProgress } from './utils/progress';
@@ -90,7 +90,7 @@ template.innerHTML = `
 </div>
 `;
 
-class MuxUploaderProgressElement extends globalThis.HTMLElement {
+class MuxUploaderProgressElement extends window.HTMLElement {
   #uploaderEl: HTMLElement | null | undefined;
 
   svgCircle: SVGCircleElement | null | undefined;
@@ -199,8 +199,8 @@ class MuxUploaderProgressElement extends globalThis.HTMLElement {
   }
 }
 
-if (!globalThis.customElements.get('mux-uploader-progress')) {
-  globalThis.customElements.define('mux-uploader-progress', MuxUploaderProgressElement);
+if (!window.customElements.get('mux-uploader-progress')) {
+  window.customElements.define('mux-uploader-progress', MuxUploaderProgressElement);
 }
 
 export default MuxUploaderProgressElement;

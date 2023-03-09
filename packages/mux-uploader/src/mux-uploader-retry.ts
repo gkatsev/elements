@@ -1,5 +1,5 @@
 /// <reference path="../dist/types/shared-polyfills.d.ts" />
-import { globalThis, document } from 'shared-polyfills';
+import { window, document } from 'shared-polyfills';
 import { getMuxUploaderEl } from './utils/element-utils';
 import type MuxUploaderElement from './mux-uploader';
 
@@ -23,7 +23,7 @@ template.innerHTML = `
 <span id="retry-button" role="button" tabindex="0">Try again</span>
 `;
 
-class MuxUploaderRetryElement extends globalThis.HTMLElement {
+class MuxUploaderRetryElement extends window.HTMLElement {
   retryButton: HTMLElement | null | undefined;
   #uploaderEl: MuxUploaderElement | null | undefined;
   #controller: AbortController | undefined;
@@ -67,8 +67,8 @@ class MuxUploaderRetryElement extends globalThis.HTMLElement {
   };
 }
 
-if (!globalThis.customElements.get('mux-uploader-retry')) {
-  globalThis.customElements.define('mux-uploader-retry', MuxUploaderRetryElement);
+if (!window.customElements.get('mux-uploader-retry')) {
+  window.customElements.define('mux-uploader-retry', MuxUploaderRetryElement);
 }
 
 export default MuxUploaderRetryElement;

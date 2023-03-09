@@ -1,5 +1,4 @@
-/// <reference path="../dist/types/shared-polyfills.d.ts" />
-import { globalThis } from 'shared-polyfills';
+import { window } from 'shared-polyfills';
 import {
   initialize,
   teardown,
@@ -365,10 +364,10 @@ declare global {
   var MuxAudioElement: MuxAudioElementType; // eslint-disable-line
 }
 
-if (!globalThis.customElements.get('mux-audio')) {
-  globalThis.customElements.define('mux-audio', MuxAudioElement);
+if (!window.customElements.get('mux-audio')) {
+  window.customElements.define('mux-audio', MuxAudioElement);
   /** @TODO consider externalizing this (breaks standard modularity) */
-  globalThis.MuxAudioElement = MuxAudioElement;
+  window.MuxAudioElement = MuxAudioElement;
 }
 
 export { PlaybackEngine, PlaybackEngine as Hls, ExtensionMimeTypeMap as MimeTypes, MediaError, AudioEvents };

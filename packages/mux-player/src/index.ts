@@ -1,5 +1,4 @@
-/// <reference path="../dist/types/shared-polyfills.d.ts" />
-import { globalThis, document } from 'shared-polyfills';
+import { window, document } from 'shared-polyfills';
 // @ts-ignore
 import { MediaController } from 'media-chrome';
 import 'media-chrome/dist/experimental/media-captions-menu-button.js';
@@ -131,7 +130,7 @@ function getThemeTemplate(el: MuxPlayerElement) {
       themeName = `media-theme-${themeName}`;
     }
 
-    const ThemeElement = globalThis.customElements.get(themeName) as MediaThemeElement | undefined;
+    const ThemeElement = window.customElements.get(themeName) as MediaThemeElement | undefined;
     if (ThemeElement?.template) return ThemeElement.template;
   }
 }
@@ -197,7 +196,7 @@ class MuxPlayerElement extends VideoApiElement {
     // even before they are connected to the main document.
     try {
       customElements.upgrade(this.mediaTheme as Node);
-      if (!(this.mediaTheme instanceof globalThis.HTMLElement)) throw '';
+      if (!(this.mediaTheme instanceof window.HTMLElement)) throw '';
     } catch (error) {
       logger.error(`<media-theme> failed to upgrade!`);
     }
@@ -830,7 +829,7 @@ class MuxPlayerElement extends VideoApiElement {
     // Fallback to computed style if no attribute is set, causes layout.
     // https://gist.github.com/paulirish/5d52fb081b3570c81e3a
     if (this.mediaTheme) {
-      color = globalThis.getComputedStyle(this.mediaTheme)?.getPropertyValue('--_primary-color')?.trim();
+      color = window.getComputedStyle(this.mediaTheme)?.getPropertyValue('--_primary-color')?.trim();
       if (color) return color;
     }
   }
@@ -852,7 +851,7 @@ class MuxPlayerElement extends VideoApiElement {
     // Fallback to computed style if no attribute is set, causes layout.
     // https://gist.github.com/paulirish/5d52fb081b3570c81e3a
     if (this.mediaTheme) {
-      color = globalThis.getComputedStyle(this.mediaTheme)?.getPropertyValue('--_secondary-color')?.trim();
+      color = window.getComputedStyle(this.mediaTheme)?.getPropertyValue('--_secondary-color')?.trim();
       if (color) return color;
     }
   }
@@ -1239,11 +1238,11 @@ export function getVideoAttribute(el: MuxPlayerElement, name: string) {
   return el.media ? el.media.getAttribute(name) : el.getAttribute(name);
 }
 
-/** @TODO Refactor once using `globalThis` polyfills */
-if (!globalThis.customElements.get('mux-player')) {
-  globalThis.customElements.define('mux-player', MuxPlayerElement);
+/** @TODO Refactor once using `window` polyfills */
+if (!window.customElements.get('mux-player')) {
+  window.customElements.define('mux-player', MuxPlayerElement);
   /** @TODO consider externalizing this (breaks standard modularity) */
-  (globalThis as any).MuxPlayerElement = MuxPlayerElement;
+  (window as any).MuxPlayerElement = MuxPlayerElement;
 }
 
 export default MuxPlayerElement;

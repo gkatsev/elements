@@ -1,4 +1,6 @@
 /// <reference path="../dist/types/mux-embed.d.ts" />
+/// <reference path="../dist/types/shared-polyfills.d.ts" />
+import { window } from 'shared-polyfills';
 import mux, { ErrorEvent } from 'mux-embed';
 import Hls from './hls';
 import type { HlsInterface } from './hls';
@@ -40,7 +42,7 @@ export {
 };
 export * from './types';
 
-const userAgentStr = globalThis?.navigator?.userAgent ?? '';
+const userAgentStr = window?.navigator?.userAgent ?? '';
 const isAndroid = userAgentStr.toLowerCase().indexOf('android') !== -1;
 const muxMediaState: WeakMap<HTMLMediaElement, Partial<MuxMediaProps>> = new WeakMap();
 

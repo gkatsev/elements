@@ -1,4 +1,4 @@
-import { globalThis, document } from 'shared-polyfills';
+import { window, document } from 'shared-polyfills';
 /**
  * Custom Audio Element
  * The goal is to create an element that works just like the audio element
@@ -59,7 +59,7 @@ template.innerHTML = `
 <slot></slot>
 `;
 
-class CustomAudioElement extends globalThis.HTMLElement {
+class CustomAudioElement extends window.HTMLElement {
   #isInit;
 
   constructor() {
@@ -224,7 +224,7 @@ const deprecatedProps = ['webkitDisplayingFullscreen', 'webkitSupportsFullscreen
 // i.e. AudioElement and MediaElement
 for (
   let proto = Object.getPrototypeOf(nativeElTest);
-  proto && proto !== globalThis.HTMLElement.prototype;
+  proto && proto !== window.HTMLElement.prototype;
   proto = Object.getPrototypeOf(proto)
 ) {
   Object.keys(proto).forEach((key) => {
@@ -274,9 +274,9 @@ function arrayFindAnyCase(arr, word) {
   return found;
 }
 
-if (!globalThis.customElements.get('custom-audio')) {
-  globalThis.customElements.define('custom-audio', CustomAudioElement);
-  globalThis.CustomAudioElement = CustomAudioElement;
+if (!window.customElements.get('custom-audio')) {
+  window.customElements.define('custom-audio', CustomAudioElement);
+  window.CustomAudioElement = CustomAudioElement;
 }
 
 export default CustomAudioElement;

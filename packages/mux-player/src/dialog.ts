@@ -1,5 +1,4 @@
-/// <reference path="../dist/types/shared-polyfills.d.ts" />
-import { globalThis, document } from 'shared-polyfills';
+import { window, document } from 'shared-polyfills';
 import MediaDialog from './media-chrome/dialog';
 
 const template = document.createElement('template');
@@ -48,9 +47,9 @@ class MxpDialog extends MediaDialog {
   }
 }
 
-if (!globalThis.customElements.get('mxp-dialog')) {
-  globalThis.customElements.define('mxp-dialog', MxpDialog);
-  (globalThis as any).MxpDialog = MxpDialog;
+if (!window.customElements.get('mxp-dialog')) {
+  window.customElements.define('mxp-dialog', MxpDialog);
+  (window as any).MxpDialog = MxpDialog;
 }
 
 export default MxpDialog;

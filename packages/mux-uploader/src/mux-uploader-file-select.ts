@@ -1,5 +1,4 @@
-/// <reference path="../dist/types/shared-polyfills.d.ts" />
-import { globalThis, document } from 'shared-polyfills';
+import { window, document } from 'shared-polyfills';
 import { getMuxUploaderEl } from './utils/element-utils';
 import type MuxUploaderElement from './mux-uploader';
 
@@ -46,7 +45,7 @@ template.innerHTML = /*html*/ `
   </slot>
 `;
 
-class MuxUploaderFileSelectElement extends globalThis.HTMLElement {
+class MuxUploaderFileSelectElement extends window.HTMLElement {
   #filePickerButton: HTMLElement | null | undefined;
 
   constructor() {
@@ -97,8 +96,8 @@ class MuxUploaderFileSelectElement extends globalThis.HTMLElement {
   }
 }
 
-if (!globalThis.customElements.get('mux-uploader-file-select')) {
-  globalThis.customElements.define('mux-uploader-file-select', MuxUploaderFileSelectElement);
+if (!window.customElements.get('mux-uploader-file-select')) {
+  window.customElements.define('mux-uploader-file-select', MuxUploaderFileSelectElement);
 }
 
 export default MuxUploaderFileSelectElement;

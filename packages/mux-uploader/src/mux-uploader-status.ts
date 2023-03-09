@@ -1,5 +1,5 @@
 /// <reference path="../dist/types/shared-polyfills.d.ts" />
-import { globalThis, document } from 'shared-polyfills';
+import { window, document } from 'shared-polyfills';
 import { getMuxUploaderEl } from './utils/element-utils';
 import { type MuxUploaderElementEventMap } from './mux-uploader';
 import type MuxUploaderElement from './mux-uploader';
@@ -17,7 +17,7 @@ template.innerHTML = `
 <span id="status-message" role="status" aria-live="polite"></span>
 `;
 
-class MuxUploaderStatusElement extends globalThis.HTMLElement {
+class MuxUploaderStatusElement extends window.HTMLElement {
   statusMessage: HTMLElement | null | undefined;
   #uploaderEl: MuxUploaderElement | null | undefined;
   #controller: AbortController | undefined;
@@ -70,8 +70,8 @@ class MuxUploaderStatusElement extends globalThis.HTMLElement {
   };
 }
 
-if (!globalThis.customElements.get('mux-uploader-status')) {
-  globalThis.customElements.define('mux-uploader-status', MuxUploaderStatusElement);
+if (!window.customElements.get('mux-uploader-status')) {
+  window.customElements.define('mux-uploader-status', MuxUploaderStatusElement);
 }
 
 export default MuxUploaderStatusElement;

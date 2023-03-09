@@ -1,5 +1,5 @@
 /// <reference path="../dist/types/shared-polyfills.d.ts" />
-import { globalThis, document } from 'shared-polyfills';
+import { window, document } from 'shared-polyfills';
 
 const template = document.createElement('template');
 
@@ -41,7 +41,7 @@ const Attributes = {
   OVERLAY_TEXT: 'overlay-text',
 };
 
-class MuxUploaderDropElement extends globalThis.HTMLElement {
+class MuxUploaderDropElement extends window.HTMLElement {
   overlayText: HTMLElement;
 
   constructor() {
@@ -120,10 +120,10 @@ class MuxUploaderDropElement extends globalThis.HTMLElement {
   }
 }
 
-if (!globalThis.customElements.get('mux-uploader-drop')) {
-  globalThis.customElements.define('mux-uploader-drop', MuxUploaderDropElement);
+if (!window.customElements.get('mux-uploader-drop')) {
+  window.customElements.define('mux-uploader-drop', MuxUploaderDropElement);
   //@ts-ignore
-  globalThis.MuxUploaderDropElement = MuxUploaderDropElement;
+  window.MuxUploaderDropElement = MuxUploaderDropElement;
 }
 
 export default MuxUploaderDropElement;

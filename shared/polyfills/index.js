@@ -59,4 +59,4 @@ const isServer = typeof window === 'undefined' || typeof globalThis.customElemen
 const GlobalThis = isServer ? globalThisShim : globalThis;
 const Document = isServer ? globalThisShim.document : globalThis.document;
 
-export { GlobalThis as globalThis, Document as document };
+export { GlobalThis as window, Document as document };

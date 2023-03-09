@@ -1,5 +1,5 @@
 /// <reference path="../dist/types/shared-polyfills.d.ts" />
-import { globalThis, document } from 'shared-polyfills';
+import { window, document } from 'shared-polyfills';
 import { getMuxUploaderEl } from './utils/element-utils';
 
 const template = document.createElement('template');
@@ -20,7 +20,7 @@ template.innerHTML = `
 <div class="sr-only" id="sr-only" aria-live="polite"></div>
 `;
 
-class MuxUploaderSrTextElement extends globalThis.HTMLElement {
+class MuxUploaderSrTextElement extends window.HTMLElement {
   srOnlyText: HTMLElement | null | undefined;
   #uploaderEl: HTMLElement | null | undefined;
 
@@ -53,8 +53,8 @@ class MuxUploaderSrTextElement extends globalThis.HTMLElement {
   }
 }
 
-if (!globalThis.customElements.get('mux-uploader-sr-text')) {
-  globalThis.customElements.define('mux-uploader-sr-text', MuxUploaderSrTextElement);
+if (!window.customElements.get('mux-uploader-sr-text')) {
+  window.customElements.define('mux-uploader-sr-text', MuxUploaderSrTextElement);
 }
 
 export default MuxUploaderSrTextElement;

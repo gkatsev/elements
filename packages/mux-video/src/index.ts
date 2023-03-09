@@ -1,5 +1,4 @@
-/// <reference path="../dist/types/shared-polyfills.d.ts" />
-import { globalThis } from 'shared-polyfills';
+import { window } from 'shared-polyfills';
 import {
   initialize,
   teardown,
@@ -517,11 +516,11 @@ declare global {
   var MuxVideoElement: MuxVideoElementType; // eslint-disable-line
 }
 
-/** @TODO Refactor once using `globalThis` polyfills */
-if (!globalThis.customElements.get('mux-video')) {
-  globalThis.customElements.define('mux-video', MuxVideoElement);
+/** @TODO Refactor once using `window` polyfills */
+if (!window.customElements.get('mux-video')) {
+  window.customElements.define('mux-video', MuxVideoElement);
   /** @TODO consider externalizing this (breaks standard modularity) */
-  globalThis.MuxVideoElement = MuxVideoElement;
+  window.MuxVideoElement = MuxVideoElement;
 }
 
 export { PlaybackEngine, PlaybackEngine as Hls, ExtensionMimeTypeMap as MimeTypes, MediaError, VideoEvents };
